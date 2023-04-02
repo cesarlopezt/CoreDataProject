@@ -42,37 +42,58 @@ struct ShipsView: View {
 
 struct SingersView: View {
     @Environment(\.managedObjectContext) var moc
-    @State private var lastNameFilter = "A"
+    @State private var lastNameFilter = ""
     
     var body: some View {
-        VStack {
-            FilteredList(filterKey: "lastName", filterValue: lastNameFilter) { (singer: Singer) in
-                Text("\(singer.wrappedFirstName) \(singer.wrappedLastName)")
-            }
-            Button("Add examples") {
-                let singer1 = Singer(context: moc)
-                singer1.firstName = "Taylor"
-                singer1.lastName = "Swift"
+        NavigationStack {
+            VStack {
+                FilteredList(
+                    predicate: .beginsWith,
+                    filterKey: "lastName",
+                    filterValue: lastNameFilter,
+                    sortDescriptors: []
+                ) { (singer: Singer) in
+                    Text("\(singer.wrappedFirstName) \(singer.wrappedLastName)")
+                }
+                Button("Add examples") {
+                    let singer1 = Singer(context: moc)
+                    singer1.firstName = "Taylor"
+                    singer1.lastName = "Swift"
+                    
+                    let singer2 = Singer(context: moc)
+                    singer2.firstName = "Ed"
+                    singer2.lastName = "Sheeran"
+                    
+                    let singer3 = Singer(context: moc)
+                    singer3.firstName = "Adele"
+                    singer3.lastName = "Adkins"
+                    
+                    let singer4 = Singer(context: moc)
+                    singer4.firstName = "Selena"
+                    singer4.lastName = "Gomez"
+                    
+                    let singer5 = Singer(context: moc)
+                    singer5.firstName = "Billie"
+                    singer5.lastName = "Eilish"
+                    
+                    let singer6 = Singer(context: moc)
+                    singer6.firstName = "Katy"
+                    singer6.lastName = "Perry"
+                    
+                    
+                    try? moc.save()
+                }
                 
-                let singer2 = Singer(context: moc)
-                singer2.firstName = "Ed"
-                singer2.lastName = "Sheeran"
-                
-                let singer3 = Singer(context: moc)
-                singer3.firstName = "Adele"
-                singer3.lastName = "Adkins"
-                
-                try? moc.save()
-            }
-            
-            Button("Show A") {
-                lastNameFilter = "A"
-            }
-            
-            Button("Show S") {
-                lastNameFilter = "S"
+                //            Button("Show A") {
+                //                lastNameFilter = "A"
+                //            }
+                //
+                //            Button("Show S") {
+                //                lastNameFilter = "S"
+                //            }
             }
         }
+        .searchable(text: $lastNameFilter)
     }
 }
 
